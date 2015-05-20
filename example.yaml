@@ -1,10 +1,10 @@
 tasks:
-  hello:
+  - name: hello
     interval: 10
     command:  echo Hello $USER
-  ls:
+  - name: file list
     interval: 15
     command:  ls
-  date:
+  - name: current date
     interval: 20
     command:  date

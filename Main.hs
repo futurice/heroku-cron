@@ -2,17 +2,16 @@
 module Main (main) where
 
 import Control.Applicative
+import Control.Concurrent
 import Control.Monad
 import Data.ByteString as BS
 import Data.List as L
-import Data.Time.Clock
 import Data.Time.Calendar
+import Data.Time.Clock
 import Data.Yaml
-import Control.Concurrent
 import System.Environment
 import System.IO
 import System.Process
-import Data.HashMap.Lazy as HM
 
 data Task = Task
   { taskName :: String
@@ -24,17 +23,14 @@ data Task = Task
 newtype Tasks = Tasks { getTasks :: [Task] }
   deriving (Eq, Ord, Show)
 
-data YamlTask = YamlTask String NominalDiffTime
-
-instance FromJSON YamlTask where
-  parseJSON (Object v) = YamlTask <$> v .: "command"
-                                  <*> (fromInteger <$> v .: "interval")
+instance FromJSON Task where
+  parseJSON (Object v) = Task <$> v .: "name"
+                              <*> v .: "command"
+                              <*> (fromInteger <$> v .: "interval")
   parseJSON _ = mzero
 
 instance FromJSON Tasks where
-  parseJSON (Object v) = f <$> v .: "tasks"
-    where f = Tasks . fmap g . HM.toList
-          g (name, YamlTask cmd interval) = Task name cmd interval
+  parseJSON (Object v) = Tasks <$> v .: "tasks"
   parseJSON _ = mzero
 
 data Job = Job { jobLastTime :: UTCTime, jobTask :: Task }
