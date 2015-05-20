@@ -35,4 +35,4 @@ RUN cabal install stackage
 ENV PATH /root/.cabal/bin:$PATH
 
 WORKDIR /build
-CMD stk install --only-dependencies && cabal build
+CMD rm -rf dist && stk install --only-dependencies && cabal build
