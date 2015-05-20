@@ -1,0 +1,10 @@
+tasks:
+  hello:
+    interval: 10
+    command:  echo Hello $USER
+  ls:
+    interval: 15
+    command:  ls
+  date:
+    interval: 20
+    command:  date
